@@ -12,3 +12,4 @@ cdk.out/
 .env
 lambda_layer/python/
 lambda_layer/.built
+IMPLEMENTATION_CHECKLIST.md
