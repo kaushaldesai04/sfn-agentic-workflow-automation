@@ -1,0 +1,21 @@
+{
+  "app": "python app.py",
+  "context": {
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": ["aws", "aws-us-gov"],
+    "environments": {
+      "dev": {
+        "application_name": "agentic-workflow",
+        "foundation_model_id": "openai.gpt-oss-20b-1:0",
+        "minimum_auto_route_confidence": 0.8,
+        "agent_timeout_seconds": 30,
+        "log_retention_days": 14,
+        "enable_agent_trace": true,
+        "queue_visibility_timeout_seconds": 120,
+        "queue_max_receive_count": 5,
+        "allow_destroy_in_dev": false
+      }
+    }
+  }
+}

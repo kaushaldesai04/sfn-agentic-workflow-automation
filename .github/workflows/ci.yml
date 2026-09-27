@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install --global aws-cdk@2
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: python scripts/build_lambda_layer.py
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: mypy
+      - run: pytest --cov --cov-report=term-missing --cov-report=xml
+      - run: bandit -c pyproject.toml -r agentic_workflow functions shared
+      - run: pip-audit
+      - name: CDK synth
+        run: >-
+          cdk synth -c environment=dev -c account=111122223333
+          -c region=us-east-1
